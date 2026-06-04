@@ -1,36 +1,30 @@
-# Site de Localização de Projetos MV Leste/Norte
+# Site de acompanhamento de equipes em campo – Enel Brasil
 
-Pacote pronto para publicação no GitHub Pages.
+Site em HTML/CSS/JavaScript para publicação no GitHub Pages, mantendo a estrutura do site original e com as seguintes atualizações:
 
-## Arquivos principais
+- Remoção das informações nominais dos técnicos.
+- Substituição de **Região Leste** por **Leste / Norte**.
+- Inclusão de logomarca **Enel Brasil** em tamanho grande no topo.
+- Inclusão da foto real de equipe trabalhando em rede aérea.
+- Base atualizada com **193 projetos**.
+- Filtros por parceira, status, tipo, data e contrato.
+- Exportação de registros filtrados em CSV.
 
-- `index.html`: página principal do site.
-- `assets/style.css`: layout visual padrão Enel, responsivo.
-- `assets/app.js`: filtros, tabela, gráficos simples e exportação CSV.
-- `assets/dados.js`: base de dados completa com 193 registros.
-- `dados/projetos.csv`: base completa em CSV separada por ponto e vírgula.
-- `dados/projetos.json`: base completa em JSON.
-- `dados/Converter_tabela_final.xlsx`: arquivo Excel original anexado.
-- `dados/Converter_tabela_original.html`: tabela HTML original anexada.
+## Estrutura
 
-## Resumo da base
-
-- Total de registros: 193
-- Registros com coordenadas: 170
-- Registros sem coordenadas: 23
-- Parceiras distintas: 7
-- Datas programadas distintas: 9
+- `index.html` – página principal
+- `assets/style.css` – estilos
+- `assets/app.js` – filtros e renderização
+- `assets/dados.js` – base JavaScript
+- `assets/enel-brasil.svg` – logomarca usada no cabeçalho
+- `assets/foto-equipe-rede-aerea.png` – foto real fornecida
+- `dados/projetos.csv` – base em CSV
+- `dados/projetos.json` – base em JSON
+- `dados/Converter_tabela_final.xlsx` – planilha original
 
 ## Como publicar no GitHub Pages
 
 1. Crie um repositório no GitHub.
-2. Envie todos os arquivos desta pasta para o repositório.
-3. Acesse `Settings` > `Pages`.
-4. Em `Build and deployment`, selecione `Deploy from a branch`.
-5. Escolha a branch `main` e a pasta `/root`.
-6. Salve e aguarde o link do GitHub Pages.
-
-## Links usados no site
-
-- Google My Maps: https://www.google.com/maps/d/edit?mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&usp=sharing
-- Google Earth: https://earth.google.com/web/@-23.42197253,-46.69298624,1119.9876251a,77499.82232393d,30.00000059y,-0h,0t,0r/data=CgRCAggBMikKJwolCiExTGFwNUh4Wl8zWG1UTFFRY2lpOTM1RU9NTHNIUUtucWggAToDCgEwQgIIAEoICIvi6tUFEAE?utm_source=mymaps
+2. Envie todos os arquivos desta pasta para a raiz do repositório.
+3. Em **Settings > Pages**, selecione a branch principal e a pasta `/root`.
+4. Aguarde a publicação do link.

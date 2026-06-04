@@ -1,66 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Localização de Projetos MV Leste/Norte – Enel</title>
-<link rel="stylesheet" href="assets/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acompanhamento de Equipes em Campo | Leste / Norte - Enel Brasil</title>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<header class="topbar">
-  <h1>Localização de Projetos MV Leste/Norte</h1>
-  <p>Site atualizado com 100% dos registros do arquivo anexado — programação de projetos, parceiras, contratos, datas e coordenadas.</p>
-  <div class="actions">
-    <a class="btn" href="https://www.google.com/maps/d/edit?mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&usp=sharing" target="_blank" rel="noopener">Abrir Google My Maps</a>
-    <a class="btn secondary" href="https://earth.google.com/web/@-23.42197253,-46.69298624,1119.9876251a,77499.82232393d,30.00000059y,-0h,0t,0r/data=CgRCAggBMikKJwolCiExTGFwNUh4Wl8zWG1UTFFRY2lpOTM1RU9NTHNIUUtucWggAToDCgEwQgIIAEoICIvi6tUFEAE?utm_source=mymaps" target="_blank" rel="noopener">Abrir Google Earth</a>
-    <a class="btn secondary" href="dados/projetos.csv" download>Baixar CSV completo</a>
-    <a class="btn secondary" href="dados/Converter_tabela_final.xlsx" download>Baixar Excel original</a>
-  </div>
-</header>
-<main class="container">
-  <section class="grid" aria-label="Resumo dos projetos">
-    <div class="kpi"><span>Total de registros</span><strong id="kTotal">0</strong></div>
-    <div class="kpi"><span>Com coordenadas</span><strong id="kCoord">0</strong></div>
-    <div class="kpi"><span>Sem coordenadas</span><strong id="kSemCoord">0</strong></div>
-    <div class="kpi"><span>Parceiras</span><strong id="kParceiras">0</strong></div>
-    <div class="kpi"><span>Datas programadas</span><strong id="kDatas">0</strong></div>
-  </section>
-  <section class="card">
-    <h2>Mapa de localização – Google My Maps</h2>
-    <iframe class="map-frame" src="https://www.google.com/maps/d/embed?mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&ehbc=2E312F" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    <div class="note">Use o mapa incorporado para visualização geral. Os filtros abaixo atuam sobre a tabela atualizada do site.</div>
-  </section>
-  <section class="card" style="margin-top:16px">
-    <h2>Filtros e consulta dos projetos</h2>
-    <div class="filters">
-      <div class="filter-group"><label for="fBusca">Busca geral</label><input id="fBusca" type="search" placeholder="Projeto, OS, equipamento, parceira..."></div>
-      <div class="filter-group"><label for="fParceira">Parceira</label><select id="fParceira"><option value="">Todas</option></select></div>
-      <div class="filter-group"><label for="fData">Data de execução</label><select id="fData"><option value="">Todas</option></select></div>
-      <div class="filter-group"><label for="fTipo">Tipo de intervenção</label><select id="fTipo"><option value="">Todos</option></select></div>
-      <div class="filter-group"><label for="fStatus">Status</label><select id="fStatus"><option value="">Todos</option></select></div>
-      <div class="filter-group"><label for="fContrato">Contrato</label><select id="fContrato"><option value="">Todos</option></select></div>
-      <div class="filter-group"><label for="fRegiao">Região</label><select id="fRegiao"><option value="">Todas</option></select></div>
-      <div class="filter-actions"><button class="small-btn" id="btnExportar">Exportar filtrados</button><button class="small-btn clear" id="btnLimpar">Limpar filtros</button></div>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand-block">
+        <img src="assets/enel-brasil.svg" alt="Logomarca Enel Brasil" class="brand-logo">
+        <h1>Acompanhamento de Equipes em Campo</h1>
+        <p class="region">LESTE / NORTE – ENEL BRASIL</p>
+        <div class="status-row">
+          <span class="status-badge">Monitoramento ativo</span>
+          <span class="status-text">Base atualizada com 193 projetos.</span>
+        </div>
+        <p class="intro">Monitoramento operacional das equipes parceiras atuantes em campo, com base na programação atualizada do período de <strong>05/06/2026 a 14/06/2026</strong>.</p>
+      </div>
+      <div class="hero-photo-card">
+        <img src="assets/foto-equipe-rede-aerea.png" alt="Equipe trabalhando na rede aérea" class="hero-photo">
+        <div class="hero-photo-caption">Equipe trabalhando na rede aérea</div>
+      </div>
     </div>
-    <div class="summary-line">
-      <span class="pill ok"><strong id="totalFiltrado">0</strong>&nbsp; registros filtrados</span>
-      <span class="pill"><strong id="coordFiltrado">0</strong>&nbsp; com coordenadas</span>
-      <span class="pill red"><strong id="semCoordFiltrado">0</strong>&nbsp; sem coordenadas</span>
-    </div>
-    <div class="charts">
-      <div class="chartbox"><h3>Quantidade por parceira</h3><div id="chartParceiras"></div></div>
-      <div class="chartbox"><h3>Quantidade por tipo de serviço</h3><div id="chartTipos"></div></div>
-    </div>
-    <div class="table-wrap">
-      <table class="projects" aria-label="Tabela de Projetos">
-        <thead><tr><th>Projeto</th><th>Tipo de Serviço</th><th>Data Prog.</th><th>Status</th><th>Contrato</th><th>OS</th><th>Equipamento</th><th>Região</th><th>Início Prog.</th><th>Fim Prog.</th><th>Parceira</th><th>Latitude</th><th>Longitude</th><th>Link Google Maps</th></tr></thead>
-        <tbody id="tbodyProjetos"></tbody>
-      </table>
-    </div>
-  </section>
-  <p class="footer">Atualizado em 04/06/2026. Estrutura preservada com tabela de projetos, mapa, filtros e arquivos de dados para publicação no GitHub Pages.</p>
-</main>
-<script src="assets/dados.js"></script>
-<script src="assets/app.js"></script>
+  </header>
+
+  <main class="page">
+    <section class="section card">
+      <h2>Mapa de localização das equipes</h2>
+      <div class="filters-toolbar">
+        <div class="toolbar-item"><label for="fParceira">Parceira</label><select id="fParceira"><option value="">Todas</option></select></div>
+        <div class="toolbar-item"><label for="fStatus">Status</label><select id="fStatus"><option value="">Todos</option></select></div>
+        <div class="toolbar-item"><label for="fTipo">Tipo</label><select id="fTipo"><option value="">Todos</option></select></div>
+        <div class="toolbar-item"><label for="fData">Data de Programação</label><select id="fData"><option value="">Todas</option></select></div>
+        <div class="toolbar-item"><label for="fContrato">Contrato</label><select id="fContrato"><option value="">Todos</option></select></div>
+        <div class="toolbar-item"><label for="fBusca">Busca geral</label><input id="fBusca" type="search" placeholder="Projeto, OS, equipamento, parceira..."></div>
+        <div class="toolbar-actions"><button id="btnLimpar" class="btn-outline">LIMPAR FILTROS</button></div>
+      </div>
+      <div class="map-links">
+        <a class="link-btn" href="https://www.google.com/maps/d/edit?mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&usp=sharing" target="_blank" rel="noopener">Abrir My Maps</a>
+        <a class="link-btn secondary" href="https://earth.google.com/web/@-23.42197253,-46.69298624,1119.9876251a,77499.82232393d,30.00000059y,-0h,0t,0r/data=CgRCAggBMikKJwolCiExTGFwNUh4Wl8zWG1UTFFRY2lpOTM1RU9NTHNIUUtucWggAToDCgEwQgIIAEoICIvi6tUFEAE?utm_source=mymaps" target="_blank" rel="noopener">Visualizar mapa compartilhado</a>
+        <span class="map-note">Base atualizada com 193 projetos da planilha anexada.</span>
+      </div>
+    </section>
+
+    <section class="section indicators">
+      <h2>Indicadores operacionais</h2>
+      <div class="kpis">
+        <div class="kpi-card"><strong id="kCoord">170</strong><span>Projetos com coordenadas</span></div>
+        <div class="kpi-card"><strong id="kLibExec">191</strong><span>Status liberado/executado</span></div>
+        <div class="kpi-card"><strong id="kPIEBRA">97</strong><span>Intervenções PIE/BRA/OLVR</span></div>
+        <div class="kpi-card"><strong id="kFI">96</strong><span>Intervenções FI</span></div>
+      </div>
+    </section>
+
+    <section class="section card partners-card">
+      <h2>Equipes parceiras envolvidas</h2>
+      <div id="listaParceiras" class="partner-tags"></div>
+    </section>
+
+    <section class="section card photo-section">
+      <h2>Atividade em rede aérea</h2>
+      <div class="photo-grid">
+        <div class="photo-text">
+          <p>Imagem real de equipe atuando em atividade de campo em rede aérea, substituindo o bloco anterior com informações nominais dos técnicos.</p>
+          <ul>
+            <li>Atuação operacional em campo.</li>
+            <li>Acompanhamento de obras e intervenções programadas.</li>
+            <li>Foco em segurança, planejamento e execução controlada.</li>
+          </ul>
+        </div>
+        <img src="assets/foto-equipe-rede-aerea.png" alt="Equipe trabalhando na rede aérea" class="section-photo">
+      </div>
+    </section>
+
+    <section class="section card objectives-card">
+      <h2>Objetivo, atividades e segurança</h2>
+      <div class="three-cols">
+        <div>
+          <h3>Objetivo</h3>
+          <ul>
+            <li>Controle operacional das equipes.</li>
+            <li>Distribuição geográfica das frentes de trabalho.</li>
+            <li>Apoio à decisão em tempo real.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Atividades</h3>
+          <ul>
+            <li>Recondutoramento e manutenção de rede.</li>
+            <li>Instalação de equipamentos: RA, CF e ET.</li>
+            <li>Obras estruturais e bloqueios PIE, BRA e OLVR.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Segurança</h3>
+          <ul>
+            <li>Atividades conforme NR-10 e NR-35.</li>
+            <li>Uso obrigatório de EPI/EPC.</li>
+            <li>APR / Pre-APR e acompanhamento SESMT.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2>Mapa de localização - Google My Maps</h2>
+      <iframe class="map-frame" src="https://www.google.com/maps/d/embed?mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&ehbc=2E312F" loading="lazy" allowfullscreen></iframe>
+    </section>
+
+    <section class="section card">
+      <div class="table-head">
+        <div>
+          <h2>Lista de programações localizadas</h2>
+          <p id="summaryText" class="summary-text"></p>
+        </div>
+        <button id="btnExportar" class="btn-outline">Exportar filtrados</button>
+      </div>
+      <div class="table-wrap">
+        <table class="projects-table">
+          <thead>
+            <tr>
+              <th>Projeto</th><th>Tipo de Serviço</th><th>Data Prog.</th><th>Status</th><th>Contrato</th><th>OS</th><th>Equipamento</th><th>Região</th><th>Início Prog.</th><th>Fim Prog.</th><th>Parceira</th><th>Latitude</th><th>Longitude</th><th>Link Google Maps</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyProjetos"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="site-footer">SEGURANÇA É VALOR • RISCO ZERO • SEMPRE CUIDAR DE TODOS • FAZER CERTO SEMPRE</footer>
+  </main>
+
+  <script src="assets/dados.js"></script>
+  <script src="assets/app.js"></script>
 </body>
 </html>
