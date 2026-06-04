@@ -1,30 +1,32 @@
-# Site de acompanhamento de equipes em campo – Enel Brasil
+# Acompanhamento de Equipes em Campo – Leste / Norte – Enel Brasil
 
-Site em HTML/CSS/JavaScript para publicação no GitHub Pages, mantendo a estrutura do site original e com as seguintes atualizações:
+Pacote atualizado para publicação no GitHub Pages com layout mais amigável e informações visíveis no navegador.
 
+## Atualizações aplicadas
+
+- Estrutura preservada: cabeçalho, filtros, indicadores, mapa, cards e tabela.
 - Remoção das informações nominais dos técnicos.
-- Substituição de **Região Leste** por **Leste / Norte**.
-- Inclusão de logomarca **Enel Brasil** em tamanho grande no topo.
-- Inclusão da foto real de equipe trabalhando em rede aérea.
-- Base atualizada com **193 projetos**.
-- Filtros por parceira, status, tipo, data e contrato.
-- Exportação de registros filtrados em CSV.
+- Substituição de Região Leste por Leste / Norte.
+- Logomarca textual ENEL BRASIL em tamanho grande.
+- Foto real da equipe trabalhando em rede aérea.
+- Dados completos da planilha: 193 projetos.
+- Tabela carregada diretamente no `index.html`, facilitando a visualização no GitHub Pages.
+- Filtros funcionais por parceira, status, tipo, data, contrato e busca geral.
+- Exportação dos registros filtrados em CSV.
 
-## Estrutura
+## Publicação no GitHub Pages
 
-- `index.html` – página principal
-- `assets/style.css` – estilos
-- `assets/app.js` – filtros e renderização
-- `assets/dados.js` – base JavaScript
-- `assets/enel-brasil.svg` – logomarca usada no cabeçalho
-- `assets/foto-equipe-rede-aerea.png` – foto real fornecida
-- `dados/projetos.csv` – base em CSV
-- `dados/projetos.json` – base em JSON
-- `dados/Converter_tabela_final.xlsx` – planilha original
+1. Abra o repositório no GitHub.
+2. Apague os arquivos antigos do site, se necessário.
+3. Envie todos os arquivos desta pasta para a raiz do repositório.
+4. Vá em Settings > Pages.
+5. Selecione a branch principal e a pasta `/root`.
+6. Aguarde a atualização do link publicado.
 
-## Como publicar no GitHub Pages
+## Arquivos principais
 
-1. Crie um repositório no GitHub.
-2. Envie todos os arquivos desta pasta para a raiz do repositório.
-3. Em **Settings > Pages**, selecione a branch principal e a pasta `/root`.
-4. Aguarde a publicação do link.
+- `index.html`: site completo com layout e dados visíveis.
+- `assets/equipe-rede-aerea.png`: foto real usada no site.
+- `dados/projetos.csv`: base em CSV.
+- `dados/projetos.json`: base em JSON.
+- `dados/Converter_tabela_final.xlsx`: planilha original.
