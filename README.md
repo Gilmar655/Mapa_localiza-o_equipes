@@ -1,14 +1,15 @@
 # Localização de Projetos – Enel Brasil
 
-Site atualizado com a programação de campo de 15 a 22 de junho.
+Site atualizado com a planilha atual de projetos para publicação no GitHub Pages.
 
-## Publicação no GitHub Pages
+## Conteúdo
+- `index.html`: site completo, responsivo, com dados, filtros, gráficos, relógio e tabela visível.
+- `.nojekyll`: evita processamento Jekyll no GitHub Pages.
+- `dados/Programacao_15_22_junho_MyMaps.xlsx`: planilha original.
+- `dados/planilha_atual_projetos.csv`: base exportada em CSV.
+- `dados/planilha_atual_projetos.json`: base exportada em JSON.
 
-1. Descompacte este ZIP.
-2. Envie `index.html`, `.nojekyll`, `README.md` e a pasta `dados` para a raiz do repositório.
-3. Em Settings > Pages, selecione a branch principal e a raiz do repositório.
+## Publicação
+Envie todos os arquivos para a raiz do repositório GitHub e habilite o GitHub Pages em Settings > Pages.
 
-Total de registros: 138
-Com coordenadas: 138
-Sem coordenadas: 0
-Período: 15/06/2026 a 22/06/2026
+Base: 138 projetos, período 15/06/2026 a 22/06/2026.
