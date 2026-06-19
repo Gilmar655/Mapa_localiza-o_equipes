@@ -1,15 +1,12 @@
-# Localização de Projetos – Enel Brasil
+# Mapa de Localização de Equipes - Enel Brasil
 
-Site atualizado com a planilha atual de projetos para publicação no GitHub Pages.
+Site atualizado com a programação de campo de 19/06/2026 a 29/06/2026.
 
 ## Conteúdo
-- `index.html`: site completo, responsivo, com dados, filtros, gráficos, relógio e tabela visível.
-- `.nojekyll`: evita processamento Jekyll no GitHub Pages.
-- `dados/Programacao_15_22_junho_MyMaps.xlsx`: planilha original.
-- `dados/planilha_atual_projetos.csv`: base exportada em CSV.
-- `dados/planilha_atual_projetos.json`: base exportada em JSON.
+- 189 projetos embutidos no `index.html`
+- Tabela visível diretamente no GitHub Pages
+- Filtros, gráficos, relógio e mapa My Maps
+- Downloads do Excel e CSV na pasta `dados/`
 
 ## Publicação
-Envie todos os arquivos para a raiz do repositório GitHub e habilite o GitHub Pages em Settings > Pages.
-
-Base: 138 projetos, período 15/06/2026 a 22/06/2026.
+Envie todos os arquivos desta pasta para a raiz do repositório GitHub Pages. O arquivo principal deve permanecer como `index.html`.
