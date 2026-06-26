@@ -1,12 +1,22 @@
-# Mapa de Localização de Equipes - Enel Brasil
+# Site Localização de Projetos – Enel Brasil
 
-Site atualizado com a programação de campo de 19/06/2026 a 29/06/2026.
+Atualização do site para publicação no GitHub Pages.
 
 ## Conteúdo
-- 189 projetos embutidos no `index.html`
-- Tabela visível diretamente no GitHub Pages
-- Filtros, gráficos, relógio e mapa My Maps
-- Downloads do Excel e CSV na pasta `dados/`
 
-## Publicação
-Envie todos os arquivos desta pasta para a raiz do repositório GitHub Pages. O arquivo principal deve permanecer como `index.html`.
+- Período: 26/06/2026 a 06/07/2026
+- Total de projetos: 148
+- Projetos com coordenadas: 148
+- Distribuição regional: NOR 89 | LES 59
+- Tabela da planilha embutida diretamente no `index.html`
+- Filtros por parceira, status, tipo de serviço, data, intervenção, região e busca geral
+- Gráficos atualizados
+- Relógio em tempo real
+- Mapa My Maps mantido
+- Botões para baixar Excel My Maps, Excel Oficial e CSV
+- Arquivo `.nojekyll` incluído
+
+## Publicação no GitHub Pages
+
+Descompacte esta pasta e envie todos os arquivos para a raiz do repositório.
+O arquivo principal precisa ficar como `index.html` na raiz.
