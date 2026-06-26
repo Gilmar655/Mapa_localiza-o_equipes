@@ -1,22 +1,20 @@
 # Site Localização de Projetos – Enel Brasil
 
-Atualização do site para publicação no GitHub Pages.
+Versão corrigida para GitHub Pages com dados embutidos no `index.html`.
+
+## Período
+26/06/2026 a 06/07/2026
 
 ## Conteúdo
-
-- Período: 26/06/2026 a 06/07/2026
-- Total de projetos: 148
-- Projetos com coordenadas: 148
+- 148 projetos visíveis no site
+- 148 projetos com coordenadas
 - Distribuição regional: NOR 89 | LES 59
-- Tabela da planilha embutida diretamente no `index.html`
 - Filtros por parceira, status, tipo de serviço, data, intervenção, região e busca geral
-- Gráficos atualizados
+- Gráficos de barras sem biblioteca externa
 - Relógio em tempo real
-- Mapa My Maps mantido
+- Tabela da planilha embutida no próprio HTML
 - Botões para baixar Excel My Maps, Excel Oficial e CSV
-- Arquivo `.nojekyll` incluído
+- Arquivo `.nojekyll`
 
-## Publicação no GitHub Pages
-
-Descompacte esta pasta e envie todos os arquivos para a raiz do repositório.
-O arquivo principal precisa ficar como `index.html` na raiz.
+## Publicação
+Envie todos os arquivos desta pasta para a raiz do repositório GitHub Pages.
