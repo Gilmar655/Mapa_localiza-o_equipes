@@ -1,25 +1,16 @@
-# Mapa de Localização de Equipes – GitHub Pages
+# Mapa de Localização de Equipes – Enel Brasil
 
-Versão atualizada para o período **10/07/2026 a 20/07/2026**.
+Site atualizado para GitHub Pages com dados da planilha `IMPORT_MyMaps_31jul_10ago_2026.xlsx`.
 
-## Indicadores
-- Total de projetos: **175**
-- Projetos com coordenadas: **175**
-- Distribuição regional: **NOR 87 | LES 85 | ABC 3**
-- Parceiras: **10**
+## Atualização
+- Período: 31/07/2026 a 10/08/2026
+- Total de projetos: 111
+- Projetos com coordenadas: 111
+- Distribuição regional: NOR 56 | LES 51 | ABC 4
+- Parceiras identificadas: 9
+- Mapa My Maps: https://www.google.com/maps/d/edit?mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&usp=sharing
 
 ## Publicação
-1. Descompacte o ZIP.
-2. Envie **todo o conteúdo interno** para a raiz do repositório.
-3. Confirme que `index.html` e `.nojekyll` estão na raiz.
-4. Em GitHub: Settings → Pages → Deploy from a branch → branch principal → `/ (root)`.
+Envie `index.html`, `.nojekyll` e este `README.md` para a raiz do repositório do GitHub Pages.
 
-## Recursos
-- Relógio em tempo real sem bibliotecas externas.
-- Gráficos de barras em HTML/CSS/JavaScript puro.
-- Filtros funcionais por parceira, status, tipo de serviço, data, intervenção, região e busca geral.
-- Planilha atual embutida diretamente no `index.html`.
-- Mapa My Maps mantido.
-- Downloads Excel e CSV.
-
-> Observação: nesta atualização foi fornecido um único arquivo Excel atual. Para manter os dois botões solicitados, o mesmo arquivo fornecido está disponível nos nomes de download “Excel My Maps” e “Excel Oficial”.
+Os dados, gráficos, filtros e a tabela estão embutidos no `index.html`, evitando falhas de carregamento por arquivos externos.
