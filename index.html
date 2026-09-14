@@ -14,7 +14,7 @@
         <img src="enel-brasil.svg" alt="Enel Brasil" class="logo">
         <h1>Mapa de Localização de Equipes</h1>
         <div class="badge">LESTE / NORTE – ENEL BRASIL</div>
-        <p class="lead">Monitoramento operacional das equipes parceiras atuantes em campo, com base na programação atualizada do período de <strong>07/09/2026 a 20/09/2026</strong>.</p>
+        <p class="lead">Monitoramento operacional das equipes parceiras atuantes em campo, com base na programação atualizada do período de <strong id="basePeriod">15/09/2026 a 04/10/2026</strong>.</p>
         <div class="clock-row">
           <span class="clock-label">Data e hora de acesso:</span>
           <span id="clock" class="clock">Carregando relógio...</span>
@@ -27,17 +27,17 @@
     </section>
 
     <section class="kpis" aria-label="Indicadores da programação">
-      <div class="kpi"><div class="ico" aria-hidden="true">📋</div><div><strong id="kTotal">119</strong><span>Total de programações</span></div></div>
-      <div class="kpi"><div class="ico" aria-hidden="true">📍</div><div><strong id="kCoord">91</strong><span>Com coordenadas</span></div></div>
-      <div class="kpi"><div class="ico" aria-hidden="true">🤝</div><div><strong id="kPartners">6</strong><span>Parceiras</span></div></div>
-      <div class="kpi"><div class="ico" aria-hidden="true">🗺️</div><div><strong id="kFiltered">119</strong><span>Registros filtrados</span></div></div>
+      <div class="kpi"><div class="ico" aria-hidden="true">📋</div><div><strong id="kTotal">—</strong><span>Total de programações</span></div></div>
+      <div class="kpi"><div class="ico" aria-hidden="true">📍</div><div><strong id="kCoord">—</strong><span>Com coordenadas</span></div></div>
+      <div class="kpi"><div class="ico" aria-hidden="true">🤝</div><div><strong id="kPartners">—</strong><span>Parceiras</span></div></div>
+      <div class="kpi"><div class="ico" aria-hidden="true">🗺️</div><div><strong id="kFiltered">—</strong><span>Registros filtrados</span></div></div>
     </section>
 
     <section class="panel" id="mapa">
       <div class="panel-head">
         <div>
           <h2>Mapa de localização das equipes</h2>
-          <div class="sub">Mapa My Maps incorporado. Distribuição regional: <strong>LES 111 | ABC 8</strong>.</div>
+          <div class="sub">Distribuição da base: <strong id="regionSummary"></strong>.<br>O My Maps é uma referência externa: a importação nesta página não altera suas camadas. Use “Abrir Maps” na tabela para a localização da base atual.</div>
         </div>
         <div class="actions">
           <a class="btn primary" href="https://www.google.com/maps/d/edit?hl=pt-BR&amp;mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&amp;ll=-23.491120767237867%2C-46.59948536465595&amp;z=11" target="_blank" rel="noopener">Abrir My Maps</a>
@@ -52,27 +52,39 @@
       <div class="panel-head">
         <div>
           <h2>Filtros e consulta</h2>
-          <div class="sub">Consulte toda a programação diretamente no site. Os filtros funcionam no navegador, sem biblioteca externa.</div>
+          <div class="sub">Consulte a base completa. A busca, os indicadores e os gráficos acompanham os filtros aplicados.</div>
         </div>
         <div class="actions">
-          <a class="btn" href="Programacao_MyMaps_07_20_setembro_2026.xlsx" download>Baixar Excel atualizado</a>
-          <a class="btn" href="projetos_atualizados.csv" download>Baixar CSV completo</a>
+          <a class="btn" id="downloadOriginal" href="Programacao_15_04_outubro_GitHub.xlsx" download>Baixar arquivo da base</a>
+          <button class="btn" id="downloadAll" type="button">Baixar CSV completo</button>
           <button class="btn" id="downloadFiltered" type="button">Exportar filtrados</button>
         </div>
+      </div>
+      <div class="import-panel">
+        <div class="actions">
+          <button class="btn primary" id="importButton" type="button">Importar base Excel / CSV</button>
+          <input type="file" id="importFile" accept=".xlsx,.csv" hidden>
+          <button class="btn" id="restoreBase" type="button">Restaurar base publicada</button>
+          <button class="btn" id="downloadData" type="button">Baixar dados para publicação</button>
+        </div>
+        <p class="sub">Importação completa de Excel (.xlsx) ou CSV: substitui a base de consulta neste navegador e mantém todas as colunas das abas de programação. Para atualizar o site de todos, publique o arquivo dados.js baixado no repositório.</p>
+        <p id="baseInfo" class="sub"></p>
+        <p id="importStatus" role="status" aria-live="polite"></p>
       </div>
       <div class="filters">
         <div><label for="fBusca">Busca geral</label><input id="fBusca" type="search" placeholder="Projeto, PowerON, equipamento, parceira..."></div>
         <div><label for="fParceira">Parceira</label><select id="fParceira"><option value="">Todas</option></select></div>
         <div><label for="fStatus">Status</label><select id="fStatus"><option value="">Todos</option></select></div>
         <div><label for="fTipo">Tipo de serviço</label><select id="fTipo"><option value="">Todos</option></select></div>
+        <div><label for="fAba">Aba de origem</label><select id="fAba"><option value="">Todas</option></select></div>
         <div><label for="fData">Data</label><select id="fData"><option value="">Todas</option></select></div>
         <div><label for="fIntervencao">Intervenção</label><select id="fIntervencao"><option value="">Todas</option></select></div>
         <div><label for="fRegiao">Região</label><select id="fRegiao"><option value="">Todas</option></select></div>
       </div>
       <div class="summary-bar" aria-live="polite">
-        <span class="pill">Programações filtradas: <strong id="summaryCount">119</strong></span>
-        <span class="pill">Com coordenadas: <strong id="summaryCoord">91</strong></span>
-        <span class="pill warning">Sem coordenadas: <strong id="summaryMissing">28</strong></span>
+        <span class="pill">Programações filtradas: <strong id="summaryCount">—</strong></span>
+        <span class="pill">Com coordenadas: <strong id="summaryCoord">—</strong></span>
+        <span class="pill warning">Sem coordenadas: <strong id="summaryMissing">—</strong></span>
         <button class="btn" id="clearFilters" type="button">Limpar filtros</button>
       </div>
     </section>
@@ -100,7 +112,7 @@
       <div class="panel-head">
         <div>
           <h2>Planilha atual visível no site</h2>
-          <div class="sub">As duas abas do Excel foram consolidadas abaixo, totalizando 119 registros. Role horizontalmente para ver todas as colunas.</div>
+          <div class="sub"><span id="tableInfo"></span> Role horizontalmente para ver todas as colunas originais.</div>
         </div>
       </div>
       <noscript><div class="empty static">Ative o JavaScript do navegador para visualizar e filtrar a planilha.</div></noscript>
@@ -120,6 +132,9 @@
     <div class="footer">SEGURANÇA É VALOR &nbsp; • &nbsp; RISCO ZERO &nbsp; • &nbsp; FAZER CERTO SEMPRE</div>
   </div>
   <script src="dados.js"></script>
+  <script src="vendor/jszip.min.js"></script>
+  <script src="importacao.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
+

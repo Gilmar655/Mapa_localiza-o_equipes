@@ -1,5 +1,6 @@
 const MY_MAPS_URL = "https://www.google.com/maps/d/edit?hl=pt-BR&mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&ll=-23.491120767237867%2C-46.59948536465595&z=11";
 const FILTERS = {
+  fAba: "Aba de origem",
   fParceira: "Parceira",
   fStatus: "Status",
   fTipo: "Tipo de Serviço",
@@ -23,6 +24,7 @@ function unique(field) {
 }
 function fillSelect(id, field) {
   const select = byId(id);
+  select.replaceChildren(new Option("Todas / todos", ""));
   unique(field).forEach((value) => {
     const option = document.createElement("option");
     option.value = value;
@@ -30,13 +32,17 @@ function fillSelect(id, field) {
     select.appendChild(option);
   });
 }
-function hasCoordinates(project) { return Boolean(project.Latitude && project.Longitude); }
+function hasCoordinates(project) {
+  const lat = String(project.Latitude ?? '').trim().replace(',','.');
+  const lon = String(project.Longitude ?? '').trim().replace(',','.');
+  return lat !== '' && lon !== '' && Number.isFinite(Number(lat)) && Number.isFinite(Number(lon)) && Math.abs(Number(lat)) <= 90 && Math.abs(Number(lon)) <= 180;
+}
 function countBy(projects, field) {
   return projects.reduce((counts, project) => {
     const label = project[field] || "Não informado";
     counts[label] = (counts[label] || 0) + 1;
     return counts;
-  }, {});
+  }, Object.create(null));
 }
 function createCell(text, className = "") {
   const cell = document.createElement("td");
@@ -69,15 +75,17 @@ function createStatusCell(project) {
   return cell;
 }
 function renderTable(projects) {
-  const body = document.querySelector("#projectTable tbody");
-  const fragment = document.createDocumentFragment();
-  projects.forEach((project, index) => {
-    const row = document.createElement("tr");
-    row.appendChild(createCell(String(index + 1)));
-    ["Projeto", "Tipo de Serviço", "Data Prog.", "Status", "Intervenção", "PowerON", "Equipamento", "Horário Início", "Horário Fim", "Parceira", "Região", "Latitude", "Longitude"].forEach((field) => row.appendChild(createCell(project[field])));
-    row.appendChild(createStatusCell(project));
-    row.appendChild(createLinkCell(project["Link Google Maps"], "Abrir Maps", "Sem coordenadas"));
-    row.appendChild(createLinkCell(project["Link My Maps"] || MY_MAPS_URL, "My Maps"));
+  const header = document.querySelector('#projectTable thead');
+  const tr = document.createElement('tr');
+  ['#','Aba de origem',...RAW_COLUMNS,'Google Maps'].forEach(name => {const th=document.createElement('th');th.textContent=name;tr.appendChild(th);});
+  header.replaceChildren(tr);
+  const body=document.querySelector('#projectTable tbody');
+  const fragment=document.createDocumentFragment();
+  projects.forEach((project,index) => {
+    const row=document.createElement('tr');
+    row.append(createCell(String(index+1)),createCell(project['Aba de origem']));
+    RAW_COLUMNS.forEach(field => row.appendChild(createCell(project._raw[field])));
+    row.appendChild(createLinkCell(hasCoordinates(project) ? 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(project.Latitude.replace(',','.')+','+project.Longitude.replace(',','.')) : '', 'Abrir Maps','—'));
     fragment.appendChild(row);
   });
   body.replaceChildren(fragment);
@@ -123,7 +131,7 @@ function renderPartners(projects) {
 function getFilteredProjects() {
   const query = normalize(byId("fBusca").value);
   return PROJETOS.filter((project) => {
-    const matchesText = !query || SEARCH_COLUMNS.some((field) => normalize(project[field]).includes(query));
+    const matchesText = !query || Object.values(project._raw).some(value => normalize(value).includes(query));
     const matchesSelections = Object.entries(FILTERS).every(([id, field]) => !byId(id).value || project[field] === byId(id).value);
     return matchesText && matchesSelections;
   });
@@ -145,36 +153,149 @@ function refresh() {
 function updateClock() {
   byId("clock").textContent = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long", day: "2-digit", month: "long", year: "numeric",
-    hour: "2-digit", minute: "2-digit", second: "2-digit"
+    hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "America/Sao_Paulo"
   }).format(new Date());
 }
-function csvEscape(value) { return `"${String(value ?? "").replaceAll('"', '""')}"`; }
-function exportFiltered() {
-  const projects = getFilteredProjects();
-  const rows = [CSV_COLUMNS.map(csvEscape).join(";"), ...projects.map((project) => CSV_COLUMNS.map((field) => csvEscape(project[field])).join(";"))];
-  const blob = new Blob(["\uFEFF", rows.join("\r\n")], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "projetos_filtrados.csv";
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 500);
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-  Object.entries(FILTERS).forEach(([id, field]) => fillSelect(id, field));
-  byId("kTotal").textContent = String(SITE_META.total);
-  byId("kCoord").textContent = String(SITE_META.withCoordinates);
-  byId("kPartners").textContent = String(SITE_META.partners);
-  updateClock();
-  setInterval(updateClock, 1000);
-  byId("fBusca").addEventListener("input", refresh);
-  Object.keys(FILTERS).forEach((id) => byId(id).addEventListener("change", refresh));
-  byId("clearFilters").addEventListener("click", () => {
-    byId("fBusca").value = "";
-    Object.keys(FILTERS).forEach((id) => { byId(id).value = ""; });
-    refresh();
-  });
-  byId("downloadFiltered").addEventListener("click", exportFiltered);
+let PROJETOS = [], RAW_COLUMNS = [], ACTIVE_BASE, originalURL;
+const ALIASES = {
+  'Projeto':['Projeto','Projetos'],
+  'Tipo de Serviço':['Descrição do Projeto','Tipo de Serviço','Descricao','Tipo de Servico'],
+  'Data Prog.':['Data Programacao','Data Programação','Data Prog.','Data Prog','Data_Programação'],
+  'Status':['Status Programacao','Status Programação','Status'],
+  'Intervenção':['Tipo Intervencao','Tipo Intervenção','Intervenção','Tipo_Int'],
+  'PowerON':['Numero PowerON','Número PowerON','PowerON'],
+  'Equipamento':['Equipamentos','Equipamento'],
+  'Parceira':['Contratada','Parceira','Empreiteira_Contratos'],
+  'Região':['Regiao','Região','Regional'],
+  'Horário Início':['Horario Inicio','Horário Início'],
+  'Horário Fim':['Horario Fim','Horário Fim'],
+  'Longitude':['Localização X (Longitude)','Longitude','Localizacao X'],
+  'Latitude':['Localização Y (Latitude)','Latitude','Localizacao Y']
+};
+const key = value => normalize(value).replace(/[^a-z0-9]/g,'');
+const DATE_COLUMN = 'Data Prog.';
+function canonicalDate(value) {
+  value=String(value ?? '').trim();
+  let match=value.match(/^(\d{4})-(\d{2})-(\d{2})(?:T.*| .*)?$/);
+  if(match) return `${match[3]}/${match[2]}/${match[1]}`;
+  match=value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(match) return `${match[1].padStart(2,'0')}/${match[2].padStart(2,'0')}/${match[3]}`;
+  return value;
+}
+function prepareBase(base) {
+  if(!base || !Array.isArray(base.sheets)) throw new Error('Base inválida.');
+  const projects=[], columns=[];
+  for(const sheet of base.sheets) {
+    if(!Array.isArray(sheet.rows)) throw new Error('Aba inválida.');
+    const rows=sheet.rows.filter(row => Array.isArray(row) && row.some(v => String(v ?? '').trim()));
+    if(!rows.length) continue;
+    const width=rows.reduce((maximum,row)=>Math.max(maximum,row.length),0);
+    const used=new Set();
+    const headers=Array.from({length:width},(_,i)=>{
+      const original=String(rows[0][i] ?? '').trim() || `Coluna ${i+1}`;
+      let name=original,n=2;
+      while(used.has(name)) name=`${original} (${n++})`;
+      used.add(name); if(!columns.includes(name)) columns.push(name);
+      return name;
+    });
+    if(!headers.some(h => ALIASES.Projeto.some(a=>key(a)===key(h)))) throw new Error(`A aba “${sheet.name}” não tem uma coluna Projeto na primeira linha preenchida. A base anterior foi mantida; nenhuma aba foi descartada.`);
+    for(const values of rows.slice(1)) {
+      const raw=Object.create(null);
+      headers.forEach((h,i)=>raw[h]=String(values[i] ?? ''));
+      const project={'Aba de origem':String(sheet.name),_raw:raw};
+      for(const [field,aliases] of Object.entries(ALIASES)) {
+        const header=headers.find(h=>aliases.some(a=>key(a)===key(h)));
+        project[field]=header ? raw[header].trim() : '';
+      }
+      project[DATE_COLUMN]=canonicalDate(project[DATE_COLUMN]);
+      projects.push(project);
+    }
+  }
+  if(!projects.length) throw new Error('Nenhum registro encontrado. A base anterior foi mantida.');
+  return {projects,columns};
+}
+function setMessage(text,error=false) {
+  byId('importStatus').textContent=text;
+  byId('importStatus').className=error ? 'error' : 'success';
+}
+function activateBase(base,local=false) {
+  const prepared=prepareBase(base);
+  ACTIVE_BASE=base;PROJETOS=prepared.projects;RAW_COLUMNS=prepared.columns;
+  byId('fBusca').value='';
+  Object.entries(FILTERS).forEach(([id,field])=>fillSelect(id,field));
+  byId('kTotal').textContent=PROJETOS.length;
+  byId('kCoord').textContent=PROJETOS.filter(hasCoordinates).length;
+  byId('kPartners').textContent=unique('Parceira').length;
+  const dates=unique(DATE_COLUMN).filter(v=>/^\d{2}\/\d{2}\/\d{4}$/.test(v));
+  byId('basePeriod').textContent=dates.length ? `${dates[0]} a ${dates[dates.length-1]}` : 'datas não informadas';
+  byId('regionSummary').textContent=Object.entries(countBy(PROJETOS,'Região')).map(([r,n])=>`${r} ${n}`).join(' | ');
+  byId('baseInfo').textContent=`${local ? 'Base importada neste navegador' : 'Base publicada'}: ${base.filename} • Atualização: ${new Date(base.updatedAt).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})} (Brasília)`;
+  byId('tableInfo').textContent=`${PROJETOS.length} registros • ${base.sheets.length} aba(s) • ${RAW_COLUMNS.length} colunas originais.`;
+  const original=byId('downloadOriginal');
+  original.hidden=local || base.filename !== 'Programacao_15_04_outubro_GitHub.xlsx';
   refresh();
+}
+function download(blob,filename) {
+  const url=URL.createObjectURL(blob), link=document.createElement('a');
+  link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+function csvEscape(value) {
+  let text=String(value ?? '');
+  // Impede execução de fórmulas em texto importado; números negativos ficam intactos.
+  if(/^[=+@\t\r]/.test(text) || (/^-/.test(text) && !/^-\d+(?:[.,]\d+)?$/.test(text))) text="'"+text;
+  return '"'+text.replaceAll('"','""')+'"';
+}
+function exportCSV(projects,name) {
+  const includeSheet=ACTIVE_BASE.sheets.length>1;
+  const fields=includeSheet ? ['Aba de origem',...RAW_COLUMNS] : RAW_COLUMNS;
+  const rows=[fields.map(csvEscape).join(';'),...projects.map(p=>(includeSheet?[p['Aba de origem'],...RAW_COLUMNS.map(f=>p._raw[f])]:RAW_COLUMNS.map(f=>p._raw[f])).map(csvEscape).join(';'))];
+  download(new Blob(['\uFEFF',rows.join('\r\n')],{type:'text/csv;charset=utf-8'}),name);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const storageKey='mapa-equipes-importacao-v1';
+  const publishedVersion=JSON.stringify(window.BASE_PUBLICADA);
+  activateBase(window.BASE_PUBLICADA);
+  try {
+    const cached=JSON.parse(localStorage.getItem(storageKey) || 'null');
+    if(cached?.publishedVersion===publishedVersion) {
+      activateBase(cached.base,true);
+      setMessage('Base importada restaurada neste navegador. Use “Restaurar base publicada” para consultar a versão do site.');
+    } else localStorage.removeItem(storageKey);
+  } catch {setMessage('Não foi possível restaurar uma importação anterior. A base publicada está disponível.',true);}
+  updateClock();setInterval(updateClock,1000);
+  byId('fBusca').addEventListener('input',refresh);
+  Object.keys(FILTERS).forEach(id=>byId(id).addEventListener('change',refresh));
+  byId('clearFilters').addEventListener('click',()=>{
+    byId('fBusca').value='';Object.keys(FILTERS).forEach(id=>byId(id).value='');refresh();
+  });
+  byId('downloadFiltered').addEventListener('click',()=>exportCSV(getFilteredProjects(),'projetos_filtrados.csv'));
+  byId('downloadAll').addEventListener('click',()=>exportCSV(PROJETOS,'projetos_atualizados.csv'));
+  byId('downloadData').addEventListener('click',()=>download(new Blob(['window.BASE_PUBLICADA = '+JSON.stringify(ACTIVE_BASE)+';\n'],{type:'text/javascript;charset=utf-8'}),'dados.js'));
+  byId('importButton').addEventListener('click',()=>byId('importFile').click());
+  byId('importFile').addEventListener('change',async event=>{
+    const file=event.target.files[0];if(!file)return;
+    byId('importButton').disabled=true;setMessage('Lendo todas as abas e colunas do arquivo…');
+    try {
+      const base=await BaseImport.readFile(file);
+      activateBase(base,true);
+      if(originalURL) URL.revokeObjectURL(originalURL);
+      originalURL=URL.createObjectURL(file);
+      const original=byId('downloadOriginal');original.href=originalURL;original.download=file.name;original.hidden=false;
+      let suffix=' A importação fica salva neste navegador.';
+      try {localStorage.setItem(storageKey,JSON.stringify({publishedVersion,base}));}
+      catch {suffix=' O navegador não permitiu salvar a importação; ela estará disponível apenas nesta sessão.';}
+      setMessage(`${PROJETOS.length} registros importados de ${base.sheets.length} aba(s), com ${RAW_COLUMNS.length} colunas.`+suffix);
+    } catch(error) {setMessage(error.message || 'Não foi possível ler o arquivo. A base anterior foi mantida.',true);}
+    finally {byId('importButton').disabled=false;event.target.value='';}
+  });
+  byId('restoreBase').addEventListener('click',()=>{
+    try {localStorage.removeItem(storageKey);} catch {}
+    activateBase(window.BASE_PUBLICADA);
+    if(originalURL) URL.revokeObjectURL(originalURL);
+    originalURL=null;
+    const original=byId('downloadOriginal');original.href='Programacao_15_04_outubro_GitHub.xlsx';original.download='Programacao_15_04_outubro_GitHub.xlsx';
+    setMessage('Base publicada restaurada.');
+  });
 });

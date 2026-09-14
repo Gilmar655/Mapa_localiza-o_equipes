@@ -118,3 +118,13 @@ tbody tr:hover { background: #fffacd !important; }
   .bar-row { grid-template-columns: 105px 1fr 30px; }
   .table-wrap { max-height: 620px; }
 }
+
+
+.logo { background: #112b5c; border-radius: 14px; padding: 6px 16px; }
+.import-panel {padding: 18px 22px; background: #f1f7ff; border-bottom: 1px solid var(--line);}
+.import-panel .actions {justify-content: flex-start;}
+#importStatus {font-size: 14px; margin: 8px 0 0; font-weight: 700;}
+#importStatus.error {color: #a31919;}
+#importStatus.success {color: #05633c;}
+button:disabled {opacity: .55; cursor: wait;}
+[hidden] {display: none !important;}
