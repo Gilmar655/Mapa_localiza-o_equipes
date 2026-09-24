@@ -1,4 +1,4 @@
-const MY_MAPS_URL = "https://www.google.com/maps/d/edit?hl=pt-BR&mid=10HwNRTu34UfYUParmwc_21swb9OrORy8&ll=-23.491120767237867%2C-46.59948536465595&z=11";
+const MY_MAPS_URL = "https://www.google.com/maps/d/edit?hl=pt-BR&mid=1kZbG01ey8w4VeP8FTa2MykKFCgyKw8A";
 const FILTERS = {
   fAba: "Aba de origem",
   fParceira: "Parceira",
@@ -84,7 +84,10 @@ function renderTable(projects) {
   projects.forEach((project,index) => {
     const row=document.createElement('tr');
     row.append(createCell(String(index+1)),createCell(project['Aba de origem']));
-    RAW_COLUMNS.forEach(field => row.appendChild(createCell(project._raw[field])));
+    RAW_COLUMNS.forEach(field => {
+      const value=project._raw[field] || '';
+      row.appendChild(/^https?:\/\//i.test(value) ? createLinkCell(value, 'Abrir link') : createCell(value));
+    });
     row.appendChild(createLinkCell(hasCoordinates(project) ? 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(project.Latitude.replace(',','.')+','+project.Longitude.replace(',','.')) : '', 'Abrir Maps','—'));
     fragment.appendChild(row);
   });
@@ -160,13 +163,13 @@ function updateClock() {
 let PROJETOS = [], RAW_COLUMNS = [], ACTIVE_BASE, originalURL;
 const ALIASES = {
   'Projeto':['Projeto','Projetos'],
-  'Tipo de Serviço':['Descrição do Projeto','Tipo de Serviço','Descricao','Tipo de Servico'],
+  'Tipo de Serviço':['Familia_Projetos','Família de Projetos','Descrição do Projeto','Tipo de Serviço','Descricao','Tipo de Servico'],
   'Data Prog.':['Data Programacao','Data Programação','Data Prog.','Data Prog','Data_Programação'],
   'Status':['Status Programacao','Status Programação','Status'],
   'Intervenção':['Tipo Intervencao','Tipo Intervenção','Intervenção','Tipo_Int'],
   'PowerON':['Numero PowerON','Número PowerON','PowerON'],
   'Equipamento':['Equipamentos','Equipamento'],
-  'Parceira':['Contratada','Parceira','Empreiteira_Contratos'],
+  'Parceira':['Contratada Completa','Contratada','Parceira','Empreiteira_Contratos'],
   'Região':['Regiao','Região','Regional'],
   'Horário Início':['Horario Inicio','Horário Início'],
   'Horário Fim':['Horario Fim','Horário Fim'],
@@ -233,7 +236,7 @@ function activateBase(base,local=false) {
   byId('baseInfo').textContent=`${local ? 'Base importada neste navegador' : 'Base publicada'}: ${base.filename} • Atualização: ${new Date(base.updatedAt).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})} (Brasília)`;
   byId('tableInfo').textContent=`${PROJETOS.length} registros • ${base.sheets.length} aba(s) • ${RAW_COLUMNS.length} colunas originais.`;
   const original=byId('downloadOriginal');
-  original.hidden=local || base.filename !== 'Programacao_15_04_outubro_GitHub.xlsx';
+  original.hidden=local || base.filename !== 'Programacao_Set_Out_com_links_MyMaps.xlsx';
   refresh();
 }
 function download(blob,filename) {
@@ -295,7 +298,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     activateBase(window.BASE_PUBLICADA);
     if(originalURL) URL.revokeObjectURL(originalURL);
     originalURL=null;
-    const original=byId('downloadOriginal');original.href='Programacao_15_04_outubro_GitHub.xlsx';original.download='Programacao_15_04_outubro_GitHub.xlsx';
+    const original=byId('downloadOriginal');original.href='Programacao_Set_Out_com_links_MyMaps.xlsx';original.download='Programacao_Set_Out_com_links_MyMaps.xlsx';
     setMessage('Base publicada restaurada.');
   });
 });

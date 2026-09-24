@@ -1,44 +1,47 @@
 # Mapa de Localização de Equipes – Enel Brasil
 
-Atualização com Programacao_15_04_outubro_GitHub.xlsx, preservando a estrutura do site.
+Atualização de 24/09/2026 com a planilha Programacao_Set_Out_com_links_MyMaps.xlsx.
 
-## Base publicada
+## Base conferida
 
-- 372 programações, de 15/09/2026 a 04/10/2026.
-- 14 colunas originais da aba Programacao, sem excluir registros ou duplicidades.
-- 11 contratadas e 157 registros com coordenadas válidas.
-- Regiões conforme a fonte: LES 182; NOR 148; oes 20; ABC 12; Sul 8; Não encontrado 2.
-- Tabela completa, busca em todas as colunas, filtros, gráficos e relógio de Brasília.
+- 460 programações de 24/09/2026 a 31/10/2026.
+- Aba Localização Equipes: 15 colunas originais, preservadas integralmente.
+- 404 registros com coordenadas válidas e 56 sem localização válida (48 com “Não encontrado” e 8 em branco).
+- 10 contratadas completas. Nenhuma linha idêntica duplicada na fonte.
+- Regiões: LES 222; NOR 185; ABC 24; OES 15; SUL 11; Não encontrado 3.
+- Status: 218 liberadas para execução, 194 liberadas para documentação, 38 pendentes de aprovação e 10 rascunhos.
+- Filtros de data, status, parceira, família de projetos, região, intervenção e aba; busca em todas as colunas.
+- Gráficos e tabela acompanham os filtros. Relógio no horário de Brasília.
 
-## Importar uma nova base
+## Publicar no GitHub
 
-1. Clique em **Importar base Excel / CSV** e escolha um arquivo .xlsx ou .csv.
-2. Todas as abas não vazias devem ter a coluna **Projeto** na primeira linha preenchida. Colunas extras são preservadas; cabeçalhos vazios ou repetidos recebem nomes distintos. Abas incompatíveis geram erro e mantêm a base anterior, sem descarte silencioso.
-3. A importação substitui a consulta local por inteiro. Indicadores, datas, gráficos, tabela e filtros são recalculados. Use o filtro de origem para consultar cada aba.
-4. A base importada é salva neste navegador, se houver espaço disponível. **Restaurar base publicada** recupera a versão do site. Uma nova versão publicada invalida automaticamente a importação antiga armazenada.
-5. **Baixar CSV completo** exporta a base ativa; **Exportar filtrados** exporta somente a consulta. O download do arquivo original permanece disponível durante a sessão de importação. Após reabrir o site, a base importada continua disponível em CSV e dados.js.
+1. Extraia o ZIP no computador.
+2. No repositório Gilmar655/Mapa_localiza-o_equipes, envie o conteúdo extraído para a raiz, substituindo os arquivos de mesmo nome. Inclua a pasta vendor e .nojekyll. Não envie apenas o ZIP.
+3. Confirme em Commit changes.
+4. Em Settings → Pages, use Deploy from a branch, branch main, pasta / (root).
+5. Aguarde a implantação e abra https://gilmar655.github.io/Mapa_localiza-o_equipes/. Se necessário, atualize com Ctrl+F5.
 
-CSV aceita ponto e vírgula, vírgula ou tabulação, campos entre aspas e quebras de linha dentro dos campos; lê UTF-8, UTF-16 com BOM e Windows-1252. Datas brasileiras são tratadas como dia/mês/ano. O leitor Excel usa valores armazenados nas células; não executa macros nem recalcula fórmulas. Para fórmulas, salve a planilha recalculada no Excel antes de importar. Limite de 30 MB por arquivo e 80 MB descompactados. Arquivos .xls antigos devem ser salvos como .xlsx.
+O pacote está pronto para publicação; sua entrega não altera automaticamente o site público.
 
-## Atualizar para todos os usuários
+## Importação Excel / CSV
 
-A importação ocorre apenas no navegador, não grava no GitHub automaticamente e não pede credenciais. Para publicar:
+O botão Importar base Excel / CSV substitui a base de consulta neste navegador. Todas as abas não vazias devem ter a coluna Projeto na primeira linha preenchida. Colunas adicionais são preservadas. Abas incompatíveis geram erro e mantêm a base anterior.
 
-1. Importe e confira a nova base.
-2. Clique em **Baixar dados para publicação**.
-3. Substitua dados.js na raiz deste repositório e confirme o commit.
-4. Aguarde o GitHub Pages concluir a implantação.
+Filtros, indicadores, gráficos e tabela são recalculados. A importação fica salva neste navegador quando há espaço. Restaurar base publicada recupera a versão do site; uma nova versão de dados.js invalida a importação antiga.
 
-O arquivo dados.js contém todas as abas importadas. A tabela, filtros, períodos e indicadores usam esse arquivo. O botão CSV exporta sempre a base ativa. Para disponibilizar também o novo Excel original para todos, atualize o arquivo e o link correspondente em index.html e app.js.
+Baixar CSV completo exporta toda a base ativa; Exportar filtrados exporta apenas o resultado dos filtros. Baixar arquivo da base fornece o Excel original publicado ou o arquivo recém-importado na sessão. Baixar dados para publicação gera dados.js: substitua esse arquivo no GitHub para atualizar a consulta para todos. Para trocar o download do Excel original, publique o novo Excel e ajuste seu nome em index.html e app.js.
 
-## Mapa
+CSV aceita ponto e vírgula, vírgula ou tabulação, campos entre aspas e quebras de linha. Excel aceita .xlsx (até 30 MB, 80 MB descompactados); o leitor não recalcula fórmulas, portanto salve-as recalculadas antes da importação.
 
-O Google My Maps incorporado foi preservado e tem base própria: importar Excel/CSV neste site não modifica suas camadas. Atualize o My Maps separadamente. O link **Abrir Maps** de cada registro usa as coordenadas da base ativa. Não são inventadas coordenadas para registros sem localização válida.
+## My Maps
 
-## Publicar o ZIP
+Mapa incorporado e botão atualizados para:
+https://www.google.com/maps/d/edit?mid=1kZbG01ey8w4VeP8FTa2MykKFCgyKw8A&usp=sharing
 
-Extraia todos os arquivos na raiz do repositório Gilmar655/Mapa_localiza-o_equipes, incluindo vendor e .nojekyll. O GitHub Pages deve publicar a branch main, pasta raiz. O ponto de entrada é index.html.
+O My Maps tem camadas próprias: os filtros e a importação do site atualizam a tabela e os gráficos, mas não alteram o mapa externo. O botão Abrir Maps na tabela usa as coordenadas de cada registro. Não foram atribuídas coordenadas aos 56 registros sem localização válida.
 
-Também é possível abrir index.html diretamente após extrair a pasta completa. A consulta e a importação funcionam localmente; o My Maps e os links externos precisam de internet.
+Não foi possível confirmar a visualização pública do My Maps durante a atualização. Caso o mapa incorporado peça acesso, o proprietário deve habilitar a visualização para quem tem o link nas opções de compartilhamento do Google My Maps. O mapa externo precisa de internet.
 
-Biblioteca incluída: JSZip, com licença em vendor/JSZip-LICENSE.markdown.
+## Arquivos
+
+index.html, style.css, app.js, importacao.js e dados.js compõem o site. A pasta vendor contém JSZip e sua licença. A planilha original, CSV e JSON atualizados acompanham o pacote. Preserve os arquivos visuais e .nojekyll.
